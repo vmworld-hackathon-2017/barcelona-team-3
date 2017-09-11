@@ -1,0 +1,78 @@
+{
+  "variables": {
+    "PACKER_OS_FLAVOUR": "debian",
+    "PACKER_OS_VERSION": "9.1.0",
+    "PACKER_OS_NAME": "debian-9.1.0-amd64",
+    "PACKER_BOX_NAME": "h5pxe-debian-9.1.0-amd64"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "name": "{{ user `PACKER_BOX_NAME` }}",
+      "vm_name": "{{ user `PACKER_BOX_NAME` }}",
+      "vmdk_name": "{{ user `PACKER_BOX_NAME` }}-disk0",
+      "boot_command": [
+        "<esc><wait>",
+        "install <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US <wait>",
+        "auto <wait>",
+        "locale=en_US <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
+        "netcfg/get_hostname=h5pxe <wait>",
+        "netcfg/get_domain=packer.loc <wait>",
+        "fb=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-keymaps-at/keymap=us <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "headless": false,
+      "disk_size": 16384,
+      "guest_os_type": "debian7-64",
+      "http_directory": "scripts/debian",
+      "iso_checksum": "697600a110c7a5a1471fbf45c8030dd99b3c570db612044730f09b4624aa49f2a3d79469d55f1c18610c2414e9fffde1533b9a6fab6f3af4b5ba7c2d59003dc1",
+      "iso_checksum_type": "sha512",
+      "iso_url": "https://cdimage.debian.org/cdimage/release/{{ user `PACKER_OS_VERSION` }}/amd64/iso-cd/{{ user `PACKER_OS_NAME` }}-netinst.iso",
+      "remote_host": "{{ user `packer_remote_host` }}",
+      "remote_datastore": "{{ user `packer_remote_datastore` }}",
+      "remote_username": "{{ user `packer_remote_username` }}",
+      "remote_password": "{{ user `packer_remote_password` }}",
+      "remote_type": "esx5",
+      "ssh_username": "root",
+      "ssh_password": "VMware1!",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "60m",
+      "vnc_disable_password": true,
+      "format": "ovf",
+      "shutdown_command": "/sbin/shutdown -Ph now",
+      "shutdown_timeout": "60s",
+      "vmx_data": {
+        "memsize": "2048",
+        "numvcpus": "2",
+
+        "ethernet0.networkName": "{{ user `packer_remote_network` }}",
+        "ethernet0.present": "TRUE",
+        "ethernet0.startConnected": "TRUE",
+        "ethernet0.virtualDev": "vmxnet3",
+        "ethernet0.addressType": "generated",
+        "ethernet0.wakeOnPcktRcv": "FALSE"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/debian/update.sh",
+        "scripts/debian/sshd.sh",
+        "scripts/debian/networking.sh",
+        "scripts/debian/filesystem.sh",
+        "scripts/debian/open-vm-tools.sh",
+        "scripts/debian/h5pxe.sh"
+      ]
+    }
+  ]
+}
