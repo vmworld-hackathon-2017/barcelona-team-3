@@ -29,7 +29,7 @@ export class HomeComponent {
             this.loading = true;
             this.peopleService.get(this.currentPage).subscribe(data => {
             console.log(data);
-            this.people = data.results;
+            this.people = data;
             this.total = data.count;
             this.loading = false;
         });

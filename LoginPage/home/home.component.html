@@ -21,26 +21,29 @@
 
 <div class=row>
     <div class="col-sm-12 col-md-8">
-        <h3>Pick your Star Wars capitan</h3>
+        <h3>Pick your ESXi host</h3>
         <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading"
         [(clrDgSingleSelected)]="selected">
+        
+            <clr-dg-column>Hostname</clr-dg-column>
+            <clr-dg-column>Hypervisor</clr-dg-column>
+            <clr-dg-column>IP</clr-dg-column>
+            <clr-dg-column>Netmask</clr-dg-column>
+            <clr-dg-column>Gateway</clr-dg-column>
+            <clr-dg-column>Kickstart</clr-dg-column>                        
+            <clr-dg-column>Status</clr-dg-column>
             
-            <clr-dg-column>Name</clr-dg-column>
-            <clr-dg-column>BirthYear
-                    <clr-tooltip>
-                            <clr-icon clrTooltipTrigger shape="info-circle" ></clr-icon>
-                            <clr-tooltip-content clrPosition="top-right" clrSize="md" *clrIfOpen>
-                                <span>BBY - Before the battle of Yavim</span>
-                            </clr-tooltip-content>
-                        </clr-tooltip>
-            </clr-dg-column>
-            <clr-dg-column>Gender</clr-dg-column>
             
             <clr-dg-row *ngFor="let person of people" [clrDgItem]="person">
                 
-                <clr-dg-cell>{{person.name}}</clr-dg-cell>
-                <clr-dg-cell>{{person.birth_year}}</clr-dg-cell>
-                <clr-dg-cell>{{person.gender}}</clr-dg-cell>
+                <clr-dg-cell>{{person.hostname}}</clr-dg-cell>
+                <clr-dg-cell>{{person.hypervisor}}</clr-dg-cell>
+                <clr-dg-cell>{{person.ip}}</clr-dg-cell>
+                <clr-dg-cell>{{person.netmask}}</clr-dg-cell>
+                <clr-dg-cell>{{person.gateway}}</clr-dg-cell>
+                <clr-dg-cell>{{person.kickstart}}</clr-dg-cell>
+                <clr-dg-cell>{{person.status}}</clr-dg-cell>
+                
             </clr-dg-row>
         
             <clr-dg-footer>
@@ -68,7 +71,7 @@
                         </clr-alert>
                         <div class="card-text">
                             <ul>
-                                <li>Heigh:{{selected.height}}</li>
+                                <li>Height:{{selected.height}}</li>
                                 <li>Mass:{{selected.mass}}</li>
                                 <li>Hair Color:{{selected.hair_color}}</li>
                                 <li>Eye Color:{{selected.eye_color}}</li>
